@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Whatsapp</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <style>
+    /* CSS for the chat UI */
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    .chat-container {
+      display: flex;
+      flex-direction: column;
+      min-height: 94.5vh;
+      padding: 20px;
+      background-color: #127368;
+      font-family: Arial, sans-serif;
+    }
+
+    .chat-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #ccc;
+    }
+
+    .group-info {
+      display: flex;
+      align-items: center;
+    }
+
+    .profile-picture {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+
+    .chat-title {
+      margin: 0;
+    }
+
+    .search-container {
+      display: flex;
+      align-items: center;
+    }
+
+    .search-container input {
+      padding: 5px;
+      border: none;
+      border-radius: 5px;
+      margin-right: 10px;
+      font-size: 16px;
+    }
+
+    .message-list {
+      flex: 1;
+      background-color: #ECE5DD;
+      overflow-y: auto;
+      padding: 10px;
+    }
+
+    .message {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 5px;
+      background-color: #fff;
+    }
+
+    .message.incoming {
+      align-self: flex-start;
+      background-color: white;
+    }
+
+    .message.outgoing {
+      align-self: flex-end;
+      background-color: #dcf8c6;
+    }
+
+    .message p {
+      margin: 0;
+    }
+
+    .input-container {
+      display: flex;
+      align-items: center;
+      position: sticky;
+      bottom: 0;
+      padding: 6px;
+      background-color: #fff;
+      z-index: 1;
+    }
+
+    .input-container input {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      background-color: lightgray;
+      border-radius: 5px;
+      margin-right: 10px;
+      font-size: 16px;
+    }
+
+    .input-container button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      background-color: #25D366;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <div class="chat-header">
+      <div class="group-info">
+        <img class="profile-picture" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/2044px-WhatsApp.svg.png" alt="Profile Picture">
+        <h3 class="chat-title">Whatsapp Group</h3>
+    </div>
+      
+      <div class="search-container">
+        <input type="text" id="search-input" placeholder="Search" oninput="handleSearch()">
+        <i class="fas fa-search"></i>
+      </div>
+    </div>
+    <div class="message-list" id="message-list">
+      <!-- Messages will be dynamically added here -->
+    </div>
+    <div class="input-container">
+      <input type="text" id="message-input" placeholder="Type your message">
+      <button id="send-button">Send</button>
+    </div>
+  </div>
+
+  <script>
+    const searchIcon = document.querySelector('.fa-search');
+    const searchInput = document.getElementById('search-input');
+    const sendButton = document.getElementById('send-button');
+    const messageInput = document.getElementById('message-input');
+    const messageList = document.querySelector('.message-list');
+    const messages = [
+      // Sample messages
+      "Hye",
+      "My name is Bhairav Jangid",
+      "Type below to talk with me 👇👇"
+    ];
+
+    searchIcon.addEventListener('click', toggleSearch);
+    sendButton.addEventListener('click', sendMessage);
+    messageInput.addEventListener('keypress', function (event) {
+      if (event.key === 'Enter') {
+        sendMessage();
+      }
+    });
+
+    function toggleSearch() {
+      searchInput.classList.toggle('active');
+      searchInput.focus();
+    }
+
+    function handleSearch() {
+      const searchTerm = searchInput.value.toLowerCase();
+      const filteredMessages = messages.filter(message => message.toLowerCase().includes(searchTerm));
+      renderMessages(filteredMessages);
+    }
+
+    function renderMessages(messages) {
+      messageList.innerHTML = '';
+      messages.forEach((message, index) => {
+        const messageType = index % 2 === 0 ? 'incoming' : 'outgoing';
+        const messageItem = document.createElement('div');
+        messageItem.classList.add('message', messageType);
+        messageItem.innerHTML = `
+          <div class="message-content">
+            <p>${message}</p>
+          </div>
+        `;
+        messageList.appendChild(messageItem);
+      });
+    }
+
+    function sendMessage() {
+      const message = messageInput.value.trim();
+      if (message) {
+        messages.push(message);
+        renderMessages(messages);
+        messageInput.value = '';
+        scrollMessageList();
+      }
+    }
+
+    function scrollMessageList() {
+      messageList.scrollTop = messageList.scrollHeight;
+    }
+
+    // Initial rendering of messages
+    renderMessages(messages);
+  </script>
+</body>
+</html>
